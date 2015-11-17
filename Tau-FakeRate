@@ -1,1 +1,177 @@
 
+#Here is the instruction to measure the jet to tau fake rate
+
+#Try to get fresh version of CMSSW
+
+      setenv  SCRAM_ARCH slc6_amd64_gcc481
+
+      cmsrel CMSSW_7_4_1_patch1
+
+      cd CMSSW_7_4_1_patch1
+
+      cmsenv
+
+      mkdir TauTutorial  
+      
+      cd TauTutorial
+
+      mkedanlzr JetToTauFR
+
+      cd JetToTauFR
+
+      scram b -j  4
+
+    
+
+#   in     python/ConfFile_cfg.py    file    replace file:myfile.root   with   
+
+
+# Here is the file in DAS:   https://cmsweb.cern.ch/das/request?input=dataset%3D%2FWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8%2FRunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1%2FMINIAODSIM&instance=prod%2Fglobal      
+
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/048FB1EE-33FD-E411-A2BA-0025905A6094.root
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/08B24FC8-3FFD-E411-86E6-00266CFFA604.root
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/102074F7-43FD-E411-940E-0025905964B6.root
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/127CC7AB-50FE-E411-A966-002590200A40.root
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/12849563-41FD-E411-A9C2-0025905C9742.root
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/14739BDA-41FD-E411-83EA-1CC1DE046F00.root
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/20290DD9-41FD-E411-B8D0-1CC1DE04FF50.root
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/267AADCE-40FD-E411-9DC3-047D7BD6DDAE.root
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/26D580AA-EFFD-E411-943E-AC853D9DAC25.root
+/store/mc/RunIISpring15DR74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/2CAAB8B1-11FE-E411-A542-00266CFFBEB4.root
+
+
+
+ 
+To be able to run on the above files you need to have a valid grid proxy. In case you do not have grid, 
+
+copy the file from my public are in afs (lxplus machines):
+/afs/cern.ch/user/a/abdollah/public/TauTutorial/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root
+
+
+or get it from the following line (from lpc machines):
+/eos/uscms/store/user/jjesus/048FB1EE-33FD-E411-A2BA-0025905A6094.root
+
+
+#add following line in cfg file
+      process.TFileService = cms.Service("TFileService",
+                                       fileName = cms.string('histodemo.root')
+                                   )
+
+########################################################
+
+#Add following lines in the plugins/JetToTauFR.cc file:
+
+      #include "FWCore/ServiceRegistry/interface/Service.h"
+      #include "CommonTools/UtilAlgos/interface/TFileService.h"
+      #include "TH1D.h"
+      #include <memory>
+#include "TMath.h"
+#include "TFile.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TTree.h"
+#include "TLorentzVector.h"
+
+#add the following line in the plugins/BuildFile.xml
+      
+      <use name="CommonTools/UtilAlgos"/>
+
+
+# under the private   add the following lines:
+TH1D * HistDenumerator;
+TH1D * HistNumerator;
+
+
+#in the constructor initite 2 histograms:
+      edm::Service<TFileService> fs;
+      HistDenumerator = fs->make<TH1D>("denumerator" , "denumerator" , 200 , 0 , 200);
+      HistNumerator = fs->make<TH1D>("numerator" , "numerator" , 200 , 0 , 200);
+        
+########################################################
+        
+#selection ecents with 1 muon and 1 tau:
+        
+#add the Pat Muon and Pat Tau headere files in the plugin:
+        
+      #include "DataFormats/PatCandidates/interface/Muon.h"
+      #include "DataFormats/PatCandidates/interface/Tau.h"
+        
+#update the BuildFile:
+      <use name="DataFormats/PatCandidates"/>
+        
+#Here is how you can run over the muon collection:
+        
+      edm::Handle<std::vector<pat::Muon>> muons;
+      iEvent.getByLabel("slimmedMuons", muons);
+      for (auto itmu = muons->cbegin(); itmu != muons->cend(); ++itmu) {    .....    }
+
+
+#and here is how you can run over the tau collection:
+
+      edm::Handle<std::vector<pat::Tau>> taus;
+      iEvent.getByLabel("slimmedTaus", taus);
+      for (auto ittau = taus->cbegin(); ittau != taus->cend(); ++ittau) {    ......   }
+
+
+########################################################
+
+#Make a pre-selection in the muon and tau collection loop:
+     
+     TLorentzVector lorMu, lorTau;
+    lorMu.SetPtEtaPhiE(itmu->pt() ,itmu->eta() ,itmu->phi() ,itmu->p() );
+    lorTau.SetPtEtaPhiE(ittau->pt() ,ittau->eta() ,ittau->phi() ,ittau->p() );
+    bool Preselection = itmu->pt() > 20 && fabs(itmu->eta()) < 2.4 &&   itmu->isPFMuon() > 0 &&   ittau->pt() > 20 && fabs(ittau->eta()) < 2.3 && lorTau.DeltaR(lorMu) > 0.5 ;
+    
+    
+     
+      
+
+#make the denumerator:    
+      bool denumetaor = Preselection && ittau->tauID("decayModeFindingNewDMs") > 0.5;
+  
+#make numerator:
+      bool numetaor = denumetaor && ittau->tauID("chargedIsoPtSum") < 2.0;
+
+    
+#Fill a numerator and denumerator Histograms:
+    
+      if (numetaor) HistNumerator->Fill(ittau->pt());
+      if (denumetaor) HistDenumerator->Fill(ittau->pt());
+      
+      
+#  compile and run the code from the JetToTauFR directory:
+
+      scram b -j  4
+cmsRun python/ConfFile_cfg.py
+      
+# Use a python macro to plot the fake rate:
+      wget https://raw.githubusercontent.com/abdollah110/TauTutorial/master/plotFakeRate.py
+      python plotFakeRate.py
+
+
+#  Now measure tau fake rate  for different tau Isolation working point listed here: 
+#  https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePFTauID#Tau_ID_2014_preparation_for_AN1
+
+ # The bnext excerise is to make the Jet to tau fake rate v.s. closest PFJet   to taus
+ # ANd Finally To select the WJet events from data, you need to require the MT of the muon and MET to be more than 30 GeV
+        
+        
+It is also intereting to measure the jet to tau fake rate in terms of the Jet Pt.  So instead of making loop over taus you make a loop
+over jets. For each Jet you need again to make a loop over tau collection to find the taus that match that Jet (dr (ket,tau)). 
+Try to find the taus that is closest to Jet.
+In teh denumerator put Jet Pt > 20 GV and tau pass decay mode finding.
+In the numerator require denumerator + tau Pass Isolation.
+
+Here is how you can access the Jets.
+
+jetTag = cms.InputTag("slimmedJets"),
+
+
+Also you can access the MET like the following
+metTag = cms.InputTag("pfMet"),
+        
+        
+            
+
+
+
