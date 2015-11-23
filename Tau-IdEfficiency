@@ -1,1 +1,35 @@
 Tau Id Efficiency
+=================
+
+MC only - not DATA/MC agreement 
+
+for measuring cross seciton need to know efficiency anyways-
+Can be done as part of Long or Short exercise
+
+
+If we choose something to be a tau how often is it a tau?
+
+1) Find all generator level taus 
+2) find out how often generator-level taus are matched to a tau
+3) try all eta ranges - show it is bad
+4) try only tracker eta ranges- show much better
+
+
+
+
+cmsrel CMSSW_7_4_15 
+cd CMSSW_7_4_15/src/
+cmsenv
+git cms-addpkg RecoTauTag/RecoTau
+git clone https://github.com/lmdodd/tauAnalysis.git RecoTauTag/tauAnalysis
+git checkout CMSDAS
+scram b -j8
+
+To  produce
+
+cd RecoTauTag/tauAnalysis
+cd test
+cmsRun runMINIAOD_effi.py
+
+python plot.py RootFile.root label[optional]
+
