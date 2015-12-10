@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
 
 		//Loop over MuTau events
 		if (nMu==1){
-			imu==0;
+			int imu=0;
 			float IsoMu=muPFChIso->at(imu)/muPt->at(imu);
 			if ( (muPFNeuIso->at(imu) + muPFPhoIso->at(imu) - 0.5* muPFPUIso->at(imu) )  > 0.0)
 				IsoMu= ( muPFChIso->at(imu)/muPt->at(imu) + muPFNeuIso->at(imu) + muPFPhoIso->at(imu) - 0.5* muPFPUIso->at(imu))/muPt->at(imu);
