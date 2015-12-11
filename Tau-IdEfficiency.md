@@ -22,7 +22,6 @@ The ratio we want is the number of taus passing an ID with all taus in the denom
 Create a new file named tauEfficiency.cc
 paste at the top 
 ```
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //   Compiling the code:   ./Make.sh tauEfficiency.cc
 //   Running the code:     ./tauEfficiency.exe OutPut.root   Input.root
@@ -59,10 +58,10 @@ int main(int argc, char** argv) {
 
 ```
 
-You want to read specific branches from the provided Ntuples, so add the following lines to access the branches you want  
+You want to read specific branches from the provided Ntuples, so add the following lines to access the branches you want after opening the file i.e. after 'cout.setf(ios::fixed, ios::floatfield);' 
 
 ``` 
-   Run_Tree->SetBranchAddress("nMC", &nMC);
+    Run_Tree->SetBranchAddress("nMC", &nMC);
     Run_Tree->SetBranchAddress("mcPID", &mcPID);
     Run_Tree->SetBranchAddress("mcPt", &mcPt);
     Run_Tree->SetBranchAddress("mcMass", &mcMass);
@@ -79,12 +78,9 @@ You want to read specific branches from the provided Ntuples, so add the followi
     Run_Tree->SetBranchAddress("tauByMVA5LooseElectronRejection", &tauByMVA5LooseElectronRejection);
     Run_Tree->SetBranchAddress("tauByLooseCombinedIsolationDeltaBetaCorr3Hits",&tauByLooseCombinedIsolationDeltaBetaCorr3Hits);
 
-    Run_Tree->SetBranchAddress("pfMET",&pfMET);
-    Run_Tree->SetBranchAddress("pfMETPhi",&pfMETPhi);
-
 ```
 
-Now you want to process all events so add a loop to process all events 
+Now you want to process all events so add a loop to process all events after you've declared the branches. 
 
 ```
     Int_t nentries_wtn = (Int_t) Run_Tree->GetEntries();
@@ -101,24 +97,4 @@ Now you want to process all events so add a loop to process all events
 
    } //End Processing all entries
 ```
-
-within your event loop you want to find all generator-level MC taus
-
-```
-        //Loop over generator-level Tau events
-        for  (int imc=0 ; imc < nMC; imc++){
-            
-            MC4Momentum.SetPtEtaPhiM(mcPt->at(imc),mcEta->at(imc),mcPhi->at(imc),mcMass->at(imc));
-            
-            bool Select_GenTau= abs(mcPID->at(imc))==15; 
-            
-            if (!Select_GenTau) continue;
-   
-        } //end loop of Generator-level Taus 
-         
-```
-
-now if we did select a generator level taus we want to match to a reconstructed hadronic decay tau 
-
-
 
