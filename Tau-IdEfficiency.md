@@ -141,4 +141,7 @@ Now insert the following lines into Generator-Level tau loop. This fills two his
 		}
 ```
 
-Now your code is all set up. You can ```/Make.sh tauEfficiency.cc``` and then ```./tauEfficiency.exe OutPut.root tot_job_spring15_ggNtuple_WJetsToLNu_amcatnlo_pythia8_25ns_miniAOD.root ``` 
+Now your code is all set up. You can ```/Make.sh tauEfficiency.cc``` and then ```./tauEfficiency.exe outputEfficiency.root tot_job_spring15_ggNtuple_WJetsToLNu_amcatnlo_pythia8_25ns_miniAOD.root ``` 
+
+When you have 
+
