@@ -98,3 +98,43 @@ Now you want to process all events so add a loop to process all events after you
    } //End Processing all entries
 ```
 
+In the nentries loop paste 
+```
+	TLorentzVector MC4Momentum, Tau4Momentum;
+
+
+	for  (int itau=0 ; itau < nTau; itau++){
+		Tau4Momentum.SetPtEtaPhiM(tauPt->at(itau),tauEta->at(itau),tauPhi->at(itau),tauMass->at(itau));
+
+		bool TauPtCut = tauPt->at(itau) > 20  && fabs(tauEta->at(itau)) < 2.3 ;
+		bool TauPreSelection = fabs(tauDxy->at(itau)) < 0.05 ;
+
+		//Loop Over Generator-Level Tau events
+	
+	        ////////////////////////////////////////////////
+                //Loop Over Generator-Level Taus////////////////
+                ////////////////////////////////////////////////
+	}//end reconstructed tau loop
+```
+
+Now insert the following lines into Generator-Level tau loop. This fills two hisstograms for the numerator and denominator.
+
+```
+		for  (int imc=0 ; imc < nMC; imc++){
+
+			MC4Momentum.SetPtEtaPhiM(mcPt->at(imc),mcEta->at(imc),mcPhi->at(imc),mcMass->at(imc));
+
+			bool Select_GenTau= abs(mcPID->at(imc))==15&&MC4Momentum.DeltaR(Tau4Momentum) < 0.2; 
+
+			if (!Select_GenTau) continue;
+
+			if (TauPtCut && TauPreSelection)
+				histoDenumerator->Fill(tauPt->at(itau));
+			if (TauPtCut && TauPreSelection && tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5)
+				histoNumerator->Fill(tauPt->at(itau));
+
+			break; //Exit the tau loop, a match was found!
+		}
+```
+
+Now your code is all set up. You can ```/Make.sh tauEfficiency.cc``` and then ```./tauEfficiency.exe OutPut.root tot_job_spring15_ggNtuple_WJetsToLNu_amcatnlo_pythia8_25ns_miniAOD.root ``` 
