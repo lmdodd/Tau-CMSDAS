@@ -4,19 +4,23 @@ Tau Id Efficiency
 MC only- exercise 
 
 
-If we choose something to be a tau how often is it a tau?
+How likely is it that we find a real tau?
 
 1) Find all generator level taus 
 
 2) Find out how often generator-level taus are matched to a tau
 
-3) Try all eta ranges
+3) Try all eta ranges- Remember to always make an eta cut for your taus! Need the tracker!
 
-3a) Remember to always make an eta cut for your taus! 
+4) Try a pt cut for the generator level taus, this could be added to the ```TauPreSelection``` for example! The gen Pt of the tau will be higher than the reconstructed pt of the tau, because a hadronically decaying tau will have a neutrino in the decay products which is not seen. Plot the efficiency as a function of the genPt of the tau. 
 
-3b) try only tracker eta ranges- show much better
+5) See the efficieniecy of different working points! Add in other tauIDs from the TreeReader.h 
 
-The ratio we want is the number of taus passing an ID with all taus in the denominator. 
+6) the choice of tau Id should be based on *both* fake rate and efficiency
+
+
+
+The ratio(Efficiency) we want is the number of real taus passing an ID with all real taus in the denominator. 
 
 
 Create a new file named tauEfficiency.cc
@@ -111,7 +115,7 @@ In the nentries loop paste
 
 		//Loop Over Generator-Level Tau events
 	
-	        ////////////////////////////////////////////////
+		////////////////////////////////////////////////
                 //Loop Over Generator-Level Taus////////////////
                 ////////////////////////////////////////////////
 	}//end reconstructed tau loop
