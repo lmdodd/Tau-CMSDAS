@@ -41,13 +41,7 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("tauByTightMuonRejection3", &tauByTightMuonRejection3);
     Run_Tree->SetBranchAddress("tauByMVA5LooseElectronRejection", &tauByMVA5LooseElectronRejection);
     Run_Tree->SetBranchAddress("tauByLooseCombinedIsolationDeltaBetaCorr3Hits",&tauByLooseCombinedIsolationDeltaBetaCorr3Hits);
-
-    Run_Tree->SetBranchAddress("pfMET",&pfMET);
-    Run_Tree->SetBranchAddress("pfMETPhi",&pfMETPhi);
     
-    
-    float MuMass= 0.10565837;
-    float eleMass= 0.000511;
     
     Int_t nentries_wtn = (Int_t) Run_Tree->GetEntries();
     cout<<"nentries_wtn===="<<nentries_wtn<<"\n";
@@ -56,35 +50,31 @@ int main(int argc, char** argv) {
         if (i % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", i, nentries_wtn);
         fflush(stdout);
         
-        TLorentzVector MC4Momentum, Tau4Momentum;
-        
-        //Loop over MCTau events
-        for  (int imc=0 ; imc < nMC; imc++){
-            
-            MC4Momentum.SetPtEtaPhiM(mcPt->at(imc),mcEta->at(imc),mcPhi->at(imc),mcMass->at(imc));
-            
-            bool Select_GenTau= abs(mcPID->at(imc))==15; 
-            
-            if (!Select_GenTau) continue;
-            
-            for  (int itau=0 ; itau < nTau; itau++){
-                Tau4Momentum.SetPtEtaPhiM(tauPt->at(itau),tauEta->at(itau),tauPhi->at(itau),tauMass->at(itau));
-                
-                bool TauPtCut = tauPt->at(itau) > 20  && fabs(tauEta->at(itau)) < 2.3 ;
-		bool TauPreSelection = fabs(tauEta->at(itau)) < 2.3 ;
-		//bool TauPreSelection = fabs(tauDxy->at(itau)) < 0.05 ;
-		//bool TauPreSelection = tauByTightMuonRejection3->at(itau) > 0 && tauByMVA5LooseElectronRejection->at(itau) > 0 && fabs(tauDxy->at(itau)) < 0.05 ;
+	TLorentzVector MC4Momentum, Tau4Momentum;
 
-		if (MC4Momentum.DeltaR(Tau4Momentum) < 0.2){
-			if (MC4Momentum.DeltaR(Tau4Momentum) < 0.2 && TauPtCut && TauPreSelection)
+
+	for  (int itau=0 ; itau < nTau; itau++){
+		Tau4Momentum.SetPtEtaPhiM(tauPt->at(itau),tauEta->at(itau),tauPhi->at(itau),tauMass->at(itau));
+
+		bool TauPtCut = tauPt->at(itau) > 20  && fabs(tauEta->at(itau)) < 2.3 ;
+		bool TauPreSelection = fabs(tauDxy->at(itau)) < 0.05 ;
+
+		//Loop Over Generator-Level Tau events
+		for  (int imc=0 ; imc < nMC; imc++){
+
+			MC4Momentum.SetPtEtaPhiM(mcPt->at(imc),mcEta->at(imc),mcPhi->at(imc),mcMass->at(imc));
+
+			bool Select_GenTau= abs(mcPID->at(imc))==15&&MC4Momentum.DeltaR(Tau4Momentum) < 0.2; 
+
+			if (!Select_GenTau) continue;
+
+			if (TauPtCut && TauPreSelection)
 				histoDenumerator->Fill(tauPt->at(itau));
-			if (MC4Momentum.DeltaR(Tau4Momentum) < 0.2 && TauPtCut && TauPreSelection && tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5)
+			if (TauPtCut && TauPreSelection && tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5)
 				histoNumerator->Fill(tauPt->at(itau));
 
-			break; //exit the tau loop, a match was found!
+			break; //Exit the tau loop, a match was found!
 		}
-
-	    }
 	}
     }
     fout->cd();
