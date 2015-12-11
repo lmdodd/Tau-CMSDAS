@@ -64,23 +64,25 @@ def produce_roc_pair(ntupleEff,ntupleFR,color,N):
     tgraph.SetMarkerColor(color)
     return tgraph
 
-def produce_tgraph(ntuple1,ntuple2,legend2, N,title=''):
+def produce_tgraph(ntuple1,ntuple2,legend1, N,title=''):
     frame = ROOT.TMultiGraph()
     frame.SetTitle(title)
     tg = produce_roc_pair(ntuple1,ntuple2, ROOT.kBlue-9, N)
-    legend = ROOT.TLegend(0.5, 0.1, 0.89, 0.4, "", "brNDC")
-    legend.SetFillColor(ROOT.kWhite)
-    legend.SetBorderSize(1)
     frame.Add(tg)
     frame.Draw("AP")
     frame.GetXaxis().SetLimits(0.,1.)
     frame.GetYaxis().SetRangeUser(0.,1.)
+    legend = ROOT.TLegend(0.7, 0.7, 0.89, 0.8, "", "brNDC")
+    legend.SetFillColor(ROOT.kWhite)
+    legend.SetBorderSize(1)
+    legend.AddEntry(tg,legend1,"pe")
+    legend.Draw()
     saveas = 'test.png'
     print saveas
     canvas.SaveAs(saveas)
 
 ################################################################################
-# Efficiency for a 20 GeV cut on tau Pt 
+#  for a
 ################################################################################
 
 produce_tgraph(ntuple_file,ntuple_file2,'id_1',100,'ROC;tauEfficiency;tauFakeRate')
