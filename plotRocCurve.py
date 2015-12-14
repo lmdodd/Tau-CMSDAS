@@ -48,8 +48,11 @@ plot_def.produce_roc_curve(
 
 
 #plot_def.produce_roc_curve(
-#			 ntuple_fileeff,ntuple_filefr,'byCombinedLoose',
-#			'ROC; tau Efficiency;tau Fake Rate',
-#			'test'
+#			 ntuple_fileeff,ntuple_filefr,
+#    			 'histoNumeratorLoose','byCombinedLoose',
+#			 'histoNumeratorMedium','byCombinedMedium',
+#			 'histoNumeratorTight','byCombinedTight',
+#			 ROC; tau Efficiency;tau Fake Rate',
+#			 'test'
 #)
 

@@ -41,6 +41,8 @@ int main(int argc, char** argv) {
     Run_Tree->SetBranchAddress("tauByTightMuonRejection3", &tauByTightMuonRejection3);
     Run_Tree->SetBranchAddress("tauByMVA5LooseElectronRejection", &tauByMVA5LooseElectronRejection);
     Run_Tree->SetBranchAddress("tauByLooseCombinedIsolationDeltaBetaCorr3Hits",&tauByLooseCombinedIsolationDeltaBetaCorr3Hits);
+    Run_Tree->SetBranchAddress("tauByMediumCombinedIsolationDeltaBetaCorr3Hits",&tauByMediumCombinedIsolationDeltaBetaCorr3Hits);
+    Run_Tree->SetBranchAddress("tauByTightCombinedIsolationDeltaBetaCorr3Hits",&tauByTightCombinedIsolationDeltaBetaCorr3Hits);
     
     
     Int_t nentries_wtn = (Int_t) Run_Tree->GetEntries();
@@ -70,7 +72,7 @@ int main(int argc, char** argv) {
 
 			if (TauPtCut && TauPreSelection)
 				histoDenumerator->Fill(tauPt->at(itau));
-			if (TauPtCut && TauPreSelection && tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5)
+			if (TauPtCut && TauPreSelection && tauByTightCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5)
 				histoNumerator->Fill(tauPt->at(itau));
 
 			break; //Exit the tau loop, a match was found!
