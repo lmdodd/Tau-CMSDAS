@@ -143,5 +143,8 @@ Now insert the following lines into Generator-Level tau loop. This fills two his
 
 Now your code is all set up. You can ```/Make.sh tauEfficiency.cc``` and then ```./tauEfficiency.exe outputEfficiency.root tot_job_spring15_ggNtuple_WJetsToLNu_amcatnlo_pythia8_25ns_miniAOD.root ``` 
 
-When you have ```outputEfficiency.root``` you can run ```python plotEfficiency.py``` to create ```tauEfficiency.pdf```
+When you have ```outputEfficiency.root``` you can run ```python plotEfficiency.py``` to create ```tauEfficiency.pdf``` to see efficiency as a function of reconstructed tau pt. This can be looked at as a funciton of gentau pt etc.
 
+With outputEffi.root and outputFR.root in hand with 4 histos in each a roc curve can be plotted witht eh 3 variables .
+
+``` python plotRocCurve.py``` 
