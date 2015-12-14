@@ -29,7 +29,7 @@ def get_ratio(histoId, ntuple):
     effi = num.Integral() / denom.Integral()
     return effi
 
-def produce_tgraph(histoId, ntupleEff,ntupleFR,color,N):
+def produce_tgraph(histoId, ntupleEff,ntupleFR,color,N,MarkerStyle=20):
     ''' Create a TGraph with one point(TGraph) '''
     id_Effi = get_ratio(histoId, ntupleEff)
     eff = numpy.array([id_Effi],dtype=float)
@@ -37,7 +37,7 @@ def produce_tgraph(histoId, ntupleEff,ntupleFR,color,N):
     fr = numpy.array([id_FakeRate],dtype=float)
     n = numpy.array([N],dtype=int)
     tgraph = ROOT.TGraph(N,eff,fr)
-    tgraph.SetMarkerStyle(20)
+    tgraph.SetMarkerStyle(MarkerStyle)
     tgraph.SetMarkerColor(color)
     return tgraph
 
@@ -53,13 +53,13 @@ def produce_roc_curve(ntupleEff,ntupleFR,histoId1, legend1, histoId2, legend2, h
     frame = ROOT.TMultiGraph()
     frame.SetTitle(title)
     #Create a TGraph to draw a line behind the other points
-    tgline = produce_tgraph(histoId1, ntupleEff, ntupleFR, ROOT.kBlack, 3)
+    tgline = produce_tgraph(histoId1, ntupleEff, ntupleFR, ROOT.kBlack, 3,1)
     produce_pair(histoId2, ntupleEff, ntupleFR, 1, tgline)
     produce_pair(histoId3,ntupleEff, ntupleFR, 2, tgline)
     #Create TGraphs to add to the TMultiGraph
     tg1 = produce_tgraph(histoId1, ntupleEff, ntupleFR, ROOT.kBlue-9, 1)
     tg2 = produce_tgraph(histoId2, ntupleEff, ntupleFR, ROOT.kRed-9, 1)
-    tg3 = produce_tgraph(histoId3, ntupleEff, ntupleFR, ROOT.kOrange+1, 1)
+    tg3 = produce_tgraph(histoId3, ntupleEff, ntupleFR, ROOT.kOrange-2, 1)
     #Add the TGraphs to the TMultigraph 
     frame.Add(tgline)
     frame.Add(tg1)
