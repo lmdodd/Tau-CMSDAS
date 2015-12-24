@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     cout << "\n\n\n InPUT NAME IS:    " << input << endl;     //PRINTING THE Input File name
     TFile * myFile = new TFile(input.c_str());
     
-    TH1F *    histoDenumerator = new TH1F ("histoDenumerator","histoDenumerator", 300, 0, 300);
+    TH1F *    histoDenominator = new TH1F ("histoDenominator","histoDenominator", 300, 0, 300);
     TH1F *    histoNumerator = new TH1F ("histoNumerator","histoNumerator", 300, 0, 300);
     
     
@@ -87,9 +87,9 @@ int main(int argc, char** argv) {
                 bool TauPtCut = tauPt->at(itau) > 20  && fabs(tauEta->at(itau)) < 2.3 ;
                 bool TauPreSelection = tauByTightMuonRejection3->at(itau) > 0 && tauByMVA5LooseElectronRejection->at(itau) > 0 && fabs(tauDxy->at(itau)) < 0.05 ;
                 
-                // Fill Denumereator
+                // Fill Denominator
                 if (Mu4Momentum.DeltaR(Tau4Momentum) > 0.5 && TauPtCut && TauPreSelection)
-                histoDenumerator->Fill(tauPt->at(itau));
+                histoDenominator->Fill(tauPt->at(itau));
                 // Fill Numerator
                 if (Mu4Momentum.DeltaR(Tau4Momentum) > 0.5 && TauPtCut && TauPreSelection && tauByTightCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5)
                 histoNumerator->Fill(tauPt->at(itau));
@@ -99,6 +99,6 @@ int main(int argc, char** argv) {
     }
     fout->cd();
     histoNumerator->Write();
-    histoDenumerator->Write();
+    histoDenominator->Write();
     fout->Close();
 }

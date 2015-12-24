@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     cout << "\n\n\n InPUT NAME IS:    " << input << endl;     //PRINTING THE Input File name
     TFile * myFile = new TFile(input.c_str());
     
-    TH1F *    histoDenumerator = new TH1F ("histoDenumerator","histoDenumerator", 300, 0, 300);
+    TH1F *    histoDenominator = new TH1F ("histoDenominator","histoDenominator", 300, 0, 300);
     TH1F *    histoNumeratorLoose = new TH1F ("histoNumeratorLoose","histoNumeratorLoose", 300, 0, 300);
     TH1F *    histoNumeratorMedium = new TH1F ("histoNumeratorMedium","histoNumeratorMedium", 300, 0, 300);
     TH1F *    histoNumeratorTight = new TH1F ("histoNumeratorTight","histoNumeratorTight", 300, 0, 300);
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 			if (!Select_GenTau) continue;
 
 			if (TauPtCut && TauPreSelection)
-				histoDenumerator->Fill(tauPt->at(itau));
+				histoDenominator->Fill(tauPt->at(itau));
 			if (TauPtCut && TauPreSelection && tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5)
 				histoNumeratorLoose->Fill(tauPt->at(itau));
 			if (TauPtCut && TauPreSelection && tauByMediumCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5)
@@ -89,6 +89,6 @@ int main(int argc, char** argv) {
     histoNumeratorLoose->Write();
     histoNumeratorMedium->Write();
     histoNumeratorTight->Write();
-    histoDenumerator->Write();
+    histoDenominator->Write();
     fout->Close();
 }

@@ -18,7 +18,7 @@ OutFile=TFile("outputEfficiency.root")
 HistoNum=OutFile.Get("histoNumerator")
 HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
 
-HistoDeNum=OutFile.Get("histoDenumerator")
+HistoDeNum=OutFile.Get("histoDenominator")
 HistoDeNum= HistoDeNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
 
 tauEffi=ROOT.TGraphAsymmErrors(HistoNum, HistoDeNum, "")

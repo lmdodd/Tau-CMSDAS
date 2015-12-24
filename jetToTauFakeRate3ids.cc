@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     cout << "\n\n\n InPUT NAME IS:    " << input << endl;     //PRINTING THE Input File name
     TFile * myFile = new TFile(input.c_str());
     
-    TH1F *    histoDenumerator = new TH1F ("histoDenumerator","histoDenumerator", 300, 0, 300);
+    TH1F *    histoDenominator = new TH1F ("histoDenominator","histoDenominator", 300, 0, 300);
     TH1F *    histoNumeratorLoose = new TH1F ("histoNumeratorLoose","histoNumeratorLoose", 300, 0, 300);
     TH1F *    histoNumeratorMedium = new TH1F ("histoNumeratorMedium","histoNumeratorMedium", 300, 0, 300);
     TH1F *    histoNumeratorTight = new TH1F ("histoNumeratorTight","histoNumeratorTight", 300, 0, 300);
@@ -89,9 +89,9 @@ int main(int argc, char** argv) {
                 bool TauPtCut = tauPt->at(itau) > 20  && fabs(tauEta->at(itau)) < 2.3 ;
                 bool TauPreSelection = tauByTightMuonRejection3->at(itau) > 0 && tauByMVA5LooseElectronRejection->at(itau) > 0 && fabs(tauDxy->at(itau)) < 0.05 ;
                 
-                // Fill Denumereator
+                // Fill Denominator
                 if (Mu4Momentum.DeltaR(Tau4Momentum) > 0.5 && TauPtCut && TauPreSelection)
-                histoDenumerator->Fill(tauPt->at(itau));
+                histoDenominator->Fill(tauPt->at(itau));
                 // Fill Numerator
                 if (Mu4Momentum.DeltaR(Tau4Momentum) > 0.5 && TauPtCut && TauPreSelection && tauByLooseCombinedIsolationDeltaBetaCorr3Hits->at(itau) > 0.5)
                 histoNumeratorLoose->Fill(tauPt->at(itau));
@@ -107,6 +107,6 @@ int main(int argc, char** argv) {
     histoNumeratorLoose->Write();
     histoNumeratorMedium->Write();
     histoNumeratorTight->Write();
-    histoDenumerator->Write();
+    histoDenominator->Write();
     fout->Close();
 }
