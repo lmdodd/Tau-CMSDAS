@@ -13,7 +13,7 @@ import array
 
 
 Binning_PT = array.array("d",[0,20,25,30,40,55,75,95,120,150,200,300])
-OutFile=TFile("OutPut.root")
+OutFile=TFile("outputFR.root")
 
 HistoNum=OutFile.Get("histoNumerator")
 HistoNum= HistoNum.Rebin(len(Binning_PT)-1,"",Binning_PT)
